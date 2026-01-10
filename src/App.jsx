@@ -8,6 +8,7 @@ import './index.css';
 
 function App() {
   const [activeView, setActiveView] = useState('samples');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const renderView = () => {
     switch (activeView) {
@@ -26,8 +27,28 @@ function App() {
 
   return (
     <div className="app">
-      <Sidebar activeView={activeView} setActiveView={setActiveView} />
+      <div
+        className={`mobile-overlay ${isSidebarOpen ? 'active' : ''}`}
+        onClick={() => setIsSidebarOpen(false)}
+      />
+
+      <Sidebar
+        activeView={activeView}
+        setActiveView={(view) => {
+          setActiveView(view);
+          setIsSidebarOpen(false);
+        }}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
+
       <div className="main-content">
+        <button
+          className="btn btn-secondary btn-icon mobile-menu-btn"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+          ☰
+        </button>
         {renderView()}
       </div>
     </div>

@@ -1,4 +1,4 @@
-const Sidebar = ({ activeView, setActiveView }) => {
+const Sidebar = ({ activeView, setActiveView, isOpen, onClose }) => {
   const menuItems = [
     { id: 'samples', name: 'Sample Tracking' },
     { id: 'results', name: 'Test Results' },
@@ -7,8 +7,8 @@ const Sidebar = ({ activeView, setActiveView }) => {
   ];
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-header">
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+      <div className="sidebar-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{
             width: '48px',
@@ -46,6 +46,9 @@ const Sidebar = ({ activeView, setActiveView }) => {
             </p>
           </div>
         </div>
+        <button className="btn btn-ghost btn-icon close-sidebar-btn" onClick={onClose}>
+          ✕
+        </button>
       </div>
 
       <nav className="sidebar-nav">
