@@ -1,7 +1,6 @@
 const Sidebar = ({ activeView, setActiveView, isOpen, onClose }) => {
   const menuItems = [
     { id: 'pending-bills', name: '📋 Test Bills', icon: '📋' },
-    { id: 'reports', name: '📄 Reports', icon: '📄' },
   ];
 
   return (
