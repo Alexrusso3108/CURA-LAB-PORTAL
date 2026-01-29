@@ -1,27 +1,21 @@
 import { useState } from 'react';
 import Sidebar from './components/Sidebar';
-import SampleTracking from './components/SampleTracking';
-import TestResults from './components/TestResults';
+import PendingBills from './components/PendingBills';
 import ReportGeneration from './components/ReportGeneration';
-import Billing from './components/Billing';
 import './index.css';
 
 function App() {
-  const [activeView, setActiveView] = useState('samples');
+  const [activeView, setActiveView] = useState('pending-bills');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const renderView = () => {
     switch (activeView) {
-      case 'samples':
-        return <SampleTracking />;
-      case 'results':
-        return <TestResults />;
+      case 'pending-bills':
+        return <PendingBills />;
       case 'reports':
         return <ReportGeneration />;
-      case 'billing':
-        return <Billing />;
       default:
-        return <SampleTracking />;
+        return <PendingBills />;
     }
   };
 
