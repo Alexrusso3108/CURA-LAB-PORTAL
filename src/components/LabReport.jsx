@@ -1,12 +1,14 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import JsBarcode from 'jsbarcode';
 
 function LabReport({ result, onClose }) {
   const reportRef = useRef();
   const headerRef = useRef();
   const patientInfoRef = useRef();
   const signatureRef = useRef();
+  const barcodeRef = useRef();
 
   const downloadPDF = async () => {
     const pdf = new jsPDF('p', 'mm', 'a4');
@@ -51,6 +53,26 @@ function LabReport({ result, onClose }) {
         signatureHeight = (signatureCanvas.height * sigWidth) / signatureCanvas.width;
       } catch (err) {
         console.warn('Could not capture signature:', err);
+      }
+    }
+
+    // Capture barcode if available
+    let barcodeImgData = null;
+    let barcodeWidth = 0;
+    let barcodeHeight = 0;
+    if (barcodeRef.current) {
+      try {
+        const barcodeCanvas = await html2canvas(barcodeRef.current, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff'
+        });
+        barcodeImgData = barcodeCanvas.toDataURL('image/png');
+        barcodeWidth = 35; // Reduced width for smaller barcode
+        barcodeHeight = (barcodeCanvas.height * barcodeWidth) / barcodeCanvas.width;
+      } catch (err) {
+        console.warn('Could not capture barcode:', err);
       }
     }
 
@@ -243,6 +265,19 @@ function LabReport({ result, onClose }) {
     });
   };
 
+  // Generate barcode when component mounts
+  useEffect(() => {
+    if (barcodeRef.current && result.bill_id) {
+      JsBarcode(barcodeRef.current, result.bill_id, {
+        format: 'CODE128',
+        width: 1,              // Reduced from 2 to 1
+        height: 30,            // Reduced from 50 to 30
+        displayValue: false,
+        margin: 0
+      });
+    }
+  }, [result.bill_id]);
+
   // Filter to only show parameters that have been entered (non-empty values)
   const parameters = Object.entries(result.test_parameters || {})
     .map(([key, value]) => ({
@@ -311,7 +346,10 @@ function LabReport({ result, onClose }) {
               <div style={{ textAlign: 'right' }}>
                 <p style={{ margin: '0 0 5px 0' }}><strong>Report Date:</strong> {formatDate(result.tested_date)}</p>
                 <p style={{ margin: '0 0 5px 0' }}><strong>Bill ID:</strong> {result.bill_id}</p>
-                <p style={{ margin: '0' }}><strong>Ref By:</strong> Self / Dr. Hospital</p>
+                <div style={{ margin: '0 0 5px 0', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px' }}>
+                  <strong>Barcode:</strong>
+                  <svg ref={barcodeRef}></svg>
+                </div>
               </div>
             </div>
 
