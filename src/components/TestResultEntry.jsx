@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { labResultsAPI } from '../lib/newApi';
+import { labResultsAPI, patientDataAPI } from '../lib/newApi';
 import { supabase } from '../lib/supabase';
 
 function TestResultEntry({ bill, template, onClose, onSave }) {
@@ -52,70 +52,129 @@ function TestResultEntry({ bill, template, onClose, onSave }) {
   }, [template]);
 
   // Fetch patient data from appointments table
-  // Ultra-robust fetch for patient data
+  // Ultra-robust fetch for patient data with enhanced debugging
   useEffect(() => {
     const fetchPatientData = async () => {
       const mrno = bill.patient_mrno || bill.mrno;
       const appId = bill.appointment_id;
+      const billId = bill.id || bill.opbill_id;
 
-      if (!mrno && !appId) return;
+      console.log('🔍 Starting patient data fetch...', {
+        mrno,
+        appId,
+        billId,
+        billObject: bill
+      });
 
-      console.log('🔍 Starting deep look-up...', { mrno, appId });
+      if (!mrno && !appId) {
+        console.warn('⚠️ No MRNO or Appointment ID available');
+        return;
+      }
 
       try {
         let foundName = '';
         let foundAge = null;
         let foundGender = '';
 
-        // 1. Try Appointments table (Search by ID or MRNO)
+        // Quick fetch using centralized API
+        const patientInfo = await patientDataAPI.fetchPatientInfo(mrno, appId);
+        if (patientInfo) {
+          console.log('✅ Got patient data from API:', patientInfo);
+          foundName = patientInfo.name;
+          foundAge = patientInfo.age;
+          foundGender = patientInfo.gender;
+
+          // Update state immediately if we have data
+          if (foundName || foundAge || foundGender) {
+            setFormData(prev => ({
+              ...prev,
+              patient_name: foundName || prev.patient_name,
+              patient_age: foundAge || prev.patient_age,
+              patient_gender: foundGender || prev.patient_gender
+            }));
+            return; // Exit early if we found everything
+          }
+        }
+
+        // Fallback: Manual detailed search if API didn't return complete data
+
+        // 1. Try Appointments table (Multiple strategies)
         if (appId || mrno) {
-          const { data: appData } = await supabase
-            .from('appointments')
-            .select('patient_name, mrno')
-            .or(`appointment_id.eq.${appId},mrno.eq.${mrno}`)
-            .order('created_at', { ascending: false })
-            .limit(1);
+          console.log('🔎 Searching appointments table...');
 
-          if (appData && appData.length > 0 && appData[0].patient_name) {
-            console.log('✅ Found name in appointments:', appData[0].patient_name);
-            foundName = appData[0].patient_name;
+          // Strategy 1a: By appointment_id
+          if (appId) {
+            const { data: appData1, error: err1 } = await supabase
+              .from('appointments')
+              .select('patient_name, mrno')
+              .eq('appointment_id', appId)
+              .maybeSingle();
+
+            if (err1) console.warn('Appointments query 1 error:', err1);
+            if (appData1?.patient_name) {
+              console.log('✅ Found in appointments (by appointment_id):', appData1.patient_name);
+              foundName = appData1.patient_name;
+            }
+          }
+
+          // Strategy 1b: By MRNO
+          if (!foundName && mrno) {
+            const { data: appData2, error: err2 } = await supabase
+              .from('appointments')
+              .select('patient_name, mrno')
+              .eq('mrno', mrno)
+              .order('created_at', { ascending: false })
+              .limit(1);
+
+            if (err2) console.warn('Appointments query 2 error:', err2);
+            if (appData2 && appData2.length > 0 && appData2[0].patient_name) {
+              console.log('✅ Found in appointments (by MRNO):', appData2[0].patient_name);
+              foundName = appData2[0].patient_name;
+            }
           }
         }
 
-        // 2. Try Users table (Search by ID or MRNO)
+        // 2. Try Users table
         if (mrno) {
-          const { data: userData } = await supabase
+          console.log('🔎 Searching users table...');
+
+          // Only MRNO match - users table doesn't have 'id' column
+          const { data: userData1, error: err3 } = await supabase
             .from('users')
-            .select('name, age, gender, date_of_birth')
-            .or(`id.eq.${mrno},mrno.eq.${mrno}`)
-            .maybeSingle();
-
-          if (userData) {
-            console.log('✅ Found patient info in users:', userData);
-            foundName = foundName || userData.name || '';
-            foundAge = userData.age || calculateAge(userData.date_of_birth);
-            foundGender = userData.gender || '';
-          }
-        }
-
-        // 3. Last resort: Walk-in Patients
-        if (!foundName && mrno) {
-          const { data: walkInData } = await supabase
-            .from('walk_in_patients')
-            .select('name, age, gender')
+            .select('name, age, gender, mrno')
             .eq('mrno', mrno)
             .maybeSingle();
 
-          if (walkInData) {
-            console.log('✅ Found name in walk_in_patients:', walkInData.name);
-            foundName = walkInData.name;
-            foundAge = foundAge || walkInData.age;
-            foundGender = foundGender || walkInData.gender;
+          if (err3) console.warn('Users query error:', err3);
+          if (userData1) {
+            console.log('✅ Found in users (by MRNO):', userData1);
+            foundName = foundName || userData1.name || '';
+            foundAge = userData1.age;
+            foundGender = userData1.gender || '';
+          }
+        }
+
+        // 3. Try Walk-in Patients table - SKIPPED (mrno column doesn't exist)
+        // The walk_in_patients table doesn't have an mrno column in your database
+
+        // 4. Check if opbilling itself has patient data columns
+        if (!foundName) {
+          console.log('🔎 Checking bill object for patient data...');
+          if (bill.patient_name) {
+            console.log('✅ Found patient_name in bill object:', bill.patient_name);
+            foundName = bill.patient_name;
+          }
+          if (bill.patient_age) {
+            foundAge = foundAge || bill.patient_age;
+          }
+          if (bill.patient_gender) {
+            foundGender = foundGender || bill.patient_gender;
           }
         }
 
         // Update state with everything we found
         if (foundName || foundAge || foundGender) {
+          console.log('✅ Patient data found:', { foundName, foundAge, foundGender });
           setFormData(prev => ({
             ...prev,
             patient_name: foundName || prev.patient_name,
@@ -123,16 +182,17 @@ function TestResultEntry({ bill, template, onClose, onSave }) {
             patient_gender: foundGender || prev.patient_gender
           }));
         } else {
-          console.log('❌ Patient not found in any table');
+          console.error('❌ Patient not found in any table. MRNO:', mrno);
+          console.log('💡 Suggestion: Run diagnose-patient-fetch.sql to investigate');
         }
 
       } catch (error) {
-        console.error('Deep look-up failed:', error);
+        console.error('❌ Patient data fetch failed:', error);
       }
     };
 
     fetchPatientData();
-  }, [bill.appointment_id, bill.patient_mrno]);
+  }, [bill.appointment_id, bill.patient_mrno, bill.id]);
 
   const calculateAge = (dob) => {
     if (!dob) return null;

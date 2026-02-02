@@ -1,6 +1,112 @@
 import { supabase } from './supabase';
 
 // =====================================================
+// PATIENT DATA API - Fetch patient information
+// =====================================================
+export const patientDataAPI = {
+  // Comprehensive patient data fetch from multiple sources
+  async fetchPatientInfo(mrno, appointmentId = null) {
+    try {
+      console.log('🔍 Fetching patient info for:', { mrno, appointmentId });
+
+      let patientData = {
+        name: '',
+        age: null,
+        gender: '',
+        source: null
+      };
+
+      // Helper function to calculate age from DOB
+      const calculateAge = (dob) => {
+        if (!dob) return null;
+        const birthDate = new Date(dob);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        return age;
+      };
+
+      // 1. Try appointments table first
+      if (appointmentId || mrno) {
+        try {
+          let query = supabase
+            .from('appointments')
+            .select('patient_name, mrno');
+
+          if (appointmentId) {
+            query = query.eq('appointment_id', appointmentId);
+          } else {
+            query = query.eq('mrno', mrno);
+          }
+
+          const { data, error } = await query
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+          if (!error && data && data.length > 0 && data[0].patient_name) {
+            console.log('✅ Found in appointments:', data[0]);
+            patientData.name = data[0].patient_name;
+            patientData.age = data[0].age || patientData.age;
+            patientData.gender = data[0].gender || patientData.gender;
+            patientData.source = 'appointments';
+
+            // If we have complete data, return early
+            if (patientData.name && patientData.age && patientData.gender) {
+              return patientData;
+            }
+          }
+        } catch (err) {
+          console.warn('Appointments query error:', err);
+        }
+      }
+
+      // 2. Try users table
+      if (mrno && !patientData.name) {
+        try {
+          // Only try MRNO match - users table doesn't have 'id' column
+          const { data, error } = await supabase.from('users')
+            .select('name, age, gender, mrno')
+            .eq('mrno', mrno)
+            .maybeSingle();
+
+          if (!error && data) {
+            console.log('✅ Found in users:', data);
+            patientData.name = patientData.name || data.name || '';
+            patientData.age = patientData.age || data.age;
+            patientData.gender = patientData.gender || data.gender || '';
+            patientData.source = patientData.source || 'users';
+
+            if (patientData.name && patientData.age && patientData.gender) {
+              return patientData;
+            }
+          }
+        } catch (err) {
+          console.warn('Users query error:', err);
+        }
+      }
+
+      // 3. Try walk-in patients table (if it exists and has data)
+      // Note: Skipping this table as it doesn't have mrno column
+      // You can manually add patient data if needed
+
+      if (patientData.name || patientData.age || patientData.gender) {
+        console.log('✅ Patient data retrieved:', patientData);
+        return patientData;
+      } else {
+        console.warn('❌ No patient data found for MRNO:', mrno);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching patient info:', error);
+      return null;
+    }
+  }
+};
+
+// =====================================================
 // LAB RESULTS API - New workflow
 // =====================================================
 export const labResultsAPI = {
@@ -454,6 +560,7 @@ export const testTemplatesAPI = {
 
 // Export all APIs
 export default {
+  patientDataAPI,
   labResultsAPI,
   pendingBillsAPI,
   testTemplatesAPI
