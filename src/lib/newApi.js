@@ -513,14 +513,44 @@ export const testTemplatesAPI = {
 
       if (error) throw error;
 
-      // Find match in JS to be safe from case/space issues
+      // Normalize the query
       const normalizedQuery = testName.trim().toLowerCase();
 
-      // Try to match by test_name first, then by test_code
-      const match = data.find(t =>
+      // Remove common prefixes
+      const cleanedQuery = normalizedQuery
+        .replace(/^serum\s*-?\s*/i, '')
+        .replace(/^blood\s*-?\s*/i, '')
+        .replace(/^urine\s*-?\s*/i, '')
+        .trim();
+
+      // Try exact match first (test_name or test_code)
+      let match = data.find(t =>
         t.test_name.toLowerCase() === normalizedQuery ||
         (t.test_code && t.test_code.toLowerCase() === normalizedQuery)
       );
+
+      // If no exact match, try with cleaned query
+      if (!match) {
+        match = data.find(t =>
+          t.test_name.toLowerCase() === cleanedQuery ||
+          (t.test_code && t.test_code.toLowerCase() === cleanedQuery)
+        );
+      }
+
+      // If still no match, try partial matching (contains)
+      if (!match) {
+        match = data.find(t =>
+          t.test_name.toLowerCase().includes(cleanedQuery) ||
+          cleanedQuery.includes(t.test_name.toLowerCase()) ||
+          (t.test_code && cleanedQuery.includes(t.test_code.toLowerCase()))
+        );
+      }
+
+      if (match) {
+        console.log(`✅ Template matched: "${testName}" → "${match.test_name}"`);
+      } else {
+        console.warn(`⚠️ No template found for: "${testName}"`);
+      }
 
       return match || null;
     } catch (error) {
