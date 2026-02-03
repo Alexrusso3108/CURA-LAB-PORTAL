@@ -92,45 +92,45 @@ VALUES (
     '[
         {
             "name": "hemoglobin",
-            "display_name": "Hemoglobin",
-            "unit": "g/dL",
-            "reference_range": "13-17 (M), 12-15 (F)",
+            "display_name": "HEMOGLOBIN",
+            "unit": "gms%",
+            "reference_range": "14 - 18",
             "type": "numeric",
             "required": true,
             "order": 1
         },
         {
-            "name": "rbc_count",
-            "display_name": "RBC Count",
-            "unit": "million/µL",
-            "reference_range": "4.5-5.5 (M), 4.0-5.0 (F)",
+            "name": "wbc_count",
+            "display_name": "TOTAL COUNT",
+            "unit": "cells/cmm",
+            "reference_range": "4000 - 11000",
             "type": "numeric",
             "required": true,
             "order": 2
         },
         {
-            "name": "wbc_count",
-            "display_name": "WBC Count",
-            "unit": "cells/µL",
-            "reference_range": "4000-11000",
+            "name": "rbc_count",
+            "display_name": "RBC COUNT",
+            "unit": "Millions/c",
+            "reference_range": "4.7 - 6.1",
             "type": "numeric",
             "required": true,
             "order": 3
         },
         {
             "name": "platelet_count",
-            "display_name": "Platelet Count",
-            "unit": "cells/µL",
-            "reference_range": "150000-450000",
+            "display_name": "PLATELET COUNT",
+            "unit": "Lakhs/cmm",
+            "reference_range": "1.5 - 4.5",
             "type": "numeric",
             "required": true,
             "order": 4
         },
         {
             "name": "hematocrit",
-            "display_name": "Hematocrit",
+            "display_name": "PACKED CELL VOLUME",
             "unit": "%",
-            "reference_range": "40-50 (M), 36-44 (F)",
+            "reference_range": "35 - 45",
             "type": "numeric",
             "required": true,
             "order": 5
@@ -138,28 +138,28 @@ VALUES (
         {
             "name": "mcv",
             "display_name": "MCV",
-            "unit": "fL",
-            "reference_range": "80-100",
+            "unit": "fl",
+            "reference_range": "80 - 99",
             "type": "numeric",
-            "required": false,
+            "required": true,
             "order": 6
         },
         {
             "name": "mch",
             "display_name": "MCH",
-            "unit": "pg",
-            "reference_range": "27-32",
+            "unit": "pg/mL",
+            "reference_range": "26 - 32",
             "type": "numeric",
-            "required": false,
+            "required": true,
             "order": 7
         },
         {
             "name": "mchc",
             "display_name": "MCHC",
-            "unit": "g/dL",
-            "reference_range": "32-36",
+            "unit": "g/dl",
+            "reference_range": "30 - 36",
             "type": "numeric",
-            "required": false,
+            "required": true,
             "order": 8
         }
     ]'::jsonb,

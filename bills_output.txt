@@ -1,0 +1,50 @@
+Bill: "LIVER FUNCTION TEST" | MRN: d4299f11-c005-48cb-b3f0-5ae16e90cc5b
+Bill: "Small dressing " | MRN: 0a376391-9a6a-408e-947c-8a2f0b0bd44c
+Bill: "RFT " | MRN: 0a376391-9a6a-408e-947c-8a2f0b0bd44c
+Bill: "Iv infusion charges " | MRN: 0a376391-9a6a-408e-947c-8a2f0b0bd44c
+Bill: "Observation charges " | MRN: 0a376391-9a6a-408e-947c-8a2f0b0bd44c
+Bill: "ABG " | MRN: 2b50605b-ad04-474d-8ecf-6a34add425fe
+Bill: "Hemodialysis " | MRN: 1e3d7296-b5ed-4177-9ad4-848ffe1a8c87
+Bill: "Echo" | MRN: 500daee7-e0b5-4d3c-8b89-b0c80b5dad47
+Bill: "Troponin I Quantitative " | MRN: 500daee7-e0b5-4d3c-8b89-b0c80b5dad47
+Bill: "Ecg" | MRN: 500daee7-e0b5-4d3c-8b89-b0c80b5dad47
+Bill: "Iv-infusation charges " | MRN: 500daee7-e0b5-4d3c-8b89-b0c80b5dad47
+Bill: "Rmo" | MRN: 500daee7-e0b5-4d3c-8b89-b0c80b5dad47
+Bill: "XRAY (L) HIP LAT" | MRN: 7e3fdd49-59dc-47ce-ba47-ef1f8f5b6c1d
+Bill: "Troponin-I Quantitative " | MRN: c353892f-f42b-40e5-b15d-c4092d38e48c
+Bill: "Op consultation fee" | MRN: c353892f-f42b-40e5-b15d-c4092d38e48c
+Bill: "Cbc" | MRN: 834b8a2d-1f58-40f6-9e30-15df83bb5494
+Bill: "COMPLETE BLOOD COUNT" | MRN: e22ae8f3-574b-47a1-8a4f-8be3d671a135
+Bill: "HEMOGLOBIN " | MRN: b08652a1-d4cf-40bd-9c19-5244bf9d214b
+Bill: "SERUM  potassium" | MRN: b08652a1-d4cf-40bd-9c19-5244bf9d214b
+Bill: "Iv-infusion charges" | MRN: 41da1aa5-50ca-48eb-9f83-f012229a0b72
+Bill: "URINE ROUTINE " | MRN: 41da1aa5-50ca-48eb-9f83-f012229a0b72
+Bill: "RMO CHARGES " | MRN: 41da1aa5-50ca-48eb-9f83-f012229a0b72
+Bill: "Physiotherapy " | MRN: 446a6347-7564-4c9a-92de-530bc846eba8
+Bill: "GROWTH SCAN" | MRN: d944083c-76a3-4baa-8114-fe92f669fcba
+Bill: "CAROTID & VERTEBRAL DOPPLER" | MRN: 7a0d63d9-53e8-4a71-8c0f-f054d1c8aa8c
+Bill: "Holter monitoring " | MRN: 7a0d63d9-53e8-4a71-8c0f-f054d1c8aa8c
+Bill: "Ecg" | MRN: 7a0d63d9-53e8-4a71-8c0f-f054d1c8aa8c
+Bill: "ECHO" | MRN: 7a0d63d9-53e8-4a71-8c0f-f054d1c8aa8c
+Bill: "Dressing small" | MRN: c3c6a008-05b0-4f85-bf9e-b57d21d7ab1d
+Bill: "URINE ROUTINE 1" | MRN: 45629562-48a6-497e-99ce-2ab5fa616370
+Bill: "RANDOM BLOOD SUGAR." | MRN: 45629562-48a6-497e-99ce-2ab5fa616370
+Bill: "COMPLETE BLOOD COUNT" | MRN: 45629562-48a6-497e-99ce-2ab5fa616370
+Bill: "URINE ROUTINE 1" | MRN: 04955367-4f3d-4f01-95a5-2c29b866e8ba
+Bill: "RANDOM BLOOD SUGAR." | MRN: 04955367-4f3d-4f01-95a5-2c29b866e8ba
+Bill: "COMPLETE BLOOD COUNT" | MRN: 04955367-4f3d-4f01-95a5-2c29b866e8ba
+Bill: "USG ABDOMEN AND PELVIS" | MRN: bb74488d-369e-4f55-8632-19927d564423
+Bill: "URINE ROUTINE 1" | MRN: bb74488d-369e-4f55-8632-19927d564423
+Bill: "THYROID PROFILE (T3,T4,TSH)" | MRN: bb74488d-369e-4f55-8632-19927d564423
+Bill: "HBA1C" | MRN: bb74488d-369e-4f55-8632-19927d564423
+Bill: "COMPLETE BLOOD COUNT" | MRN: bb74488d-369e-4f55-8632-19927d564423
+Bill: "XRAY CHEST PA" | MRN: 27fdb117-cb34-4e2b-a3b8-747a17d654ec
+Bill: "COMPLETE BLOOD COUNT" | MRN: 27fdb117-cb34-4e2b-a3b8-747a17d654ec
+Bill: "C - REACTIVE PROTIEN ( CRP )" | MRN: 27fdb117-cb34-4e2b-a3b8-747a17d654ec
+Bill: "Im inj" | MRN: 43e807b5-37e0-4fae-9478-0b54728553a7
+Bill: "Dressing medium " | MRN: 43e807b5-37e0-4fae-9478-0b54728553a7
+Bill: "Rmo charges " | MRN: 43e807b5-37e0-4fae-9478-0b54728553a7
+Bill: "URINE ROUTINE 1" | MRN: 47fbc555-2bb0-402d-8de5-1476db58d266
+Bill: "Consultation - Dr.Anindita DC " | MRN: 2603d72d-61d1-437d-9cb7-be2a1793e3e2
+Bill: "Im injection " | MRN: 0e988603-1e56-4c89-9c67-ccad07abe2c1
+Bill: "URINE ROUTINE 1" | MRN: 42afd273-aaf2-4063-a543-d72577b204da

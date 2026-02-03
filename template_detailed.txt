@@ -1,0 +1,87 @@
+[
+  {
+    "id": "06b9cf07-3750-412b-a47b-dc5fdc03b2d6",
+    "name": "Lipid Profile",
+    "count": 6
+  },
+  {
+    "id": "2b62aa4d-8010-4bcc-8cef-13babc4b726b",
+    "name": "Liver Function Test",
+    "count": 9
+  },
+  {
+    "id": "bba49b15-c1ea-4fb4-bdd5-5dd05f4a44df",
+    "name": "Kidney Function Test",
+    "count": 6
+  },
+  {
+    "id": "395b13ee-6efc-4447-9ed4-daf8f64f77bc",
+    "name": "Thyroid Function Test",
+    "count": 3
+  },
+  {
+    "id": "4cb7a42d-afd5-4b56-8eae-60d93b186b24",
+    "name": "Blood Sugar Fasting",
+    "count": 1
+  },
+  {
+    "id": "05fef7f1-ca12-4f80-909f-cd0135adb873",
+    "name": "Blood Sugar Random",
+    "count": 1
+  },
+  {
+    "id": "cd6e6d69-5ba9-419e-bdef-f252502ddc70",
+    "name": "HAEMOGRAM ( CBC and ESR and PS)",
+    "count": 8
+  },
+  {
+    "id": "271fe9a7-007e-4251-a764-3a41c5da6bdd",
+    "name": "Serology Profile",
+    "count": 4
+  },
+  {
+    "id": "32c0e0d6-431f-4d80-abce-f67404e2954c",
+    "name": "Liver Function Test (Detailed)",
+    "count": 11
+  },
+  {
+    "id": "403b8d6c-d398-45b4-8476-55168fc2eb96",
+    "name": "Serum Electrolytes",
+    "count": 5
+  },
+  {
+    "id": "54125d23-eab0-4ca4-8375-1075c3b08b5d",
+    "name": "Troponin- I Quantitative",
+    "count": 23
+  },
+  {
+    "id": "aa538d55-9325-4c96-bfef-31f76db57ed3",
+    "name": "COMPLETE BLOOD COUNT",
+    "count": 8
+  },
+  {
+    "id": "7c70dd6b-9a52-4927-b7cc-5ba36ef733c5",
+    "name": "HbA1c",
+    "count": 10
+  },
+  {
+    "id": "421f034a-d8df-4dbe-ac31-54a4716aac8c",
+    "name": "URINE ROUTINE",
+    "count": 17
+  },
+  {
+    "id": "989293a0-d3c0-4ead-9204-ac8db6cb1382",
+    "name": "URINE ROUTINE 1",
+    "count": 17
+  },
+  {
+    "id": "58207b29-af17-48d0-abd0-44d4e7d0a03d",
+    "name": "URINE ROUTINE 2",
+    "count": 17
+  },
+  {
+    "id": "7430f1f7-d0a7-4da7-988c-944d0a778586",
+    "name": "Complete Blood Count",
+    "count": 8
+  }
+]

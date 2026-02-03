@@ -37,7 +37,8 @@ function TestResultEntry({ bill, template, onClose, onSave }) {
           unit: param.unit,
           reference_range: param.reference_range,
           status: 'normal',
-          flag: ''
+          flag: '',
+          order: param.order
         };
       });
 
@@ -242,8 +243,8 @@ function TestResultEntry({ bill, template, onClose, onSave }) {
     if (isNaN(numValue)) return 'normal';
 
     // Extract numeric ranges from reference_range
-    // Example: "13-17 (M), 12-15 (F)" or "<200" or ">40"
-    const rangeMatch = referenceRange.match(/(\d+\.?\d*)-(\d+\.?\d*)/);
+    // Example: "13-17 (M), 12-15 (F)" or "14 - 18" or "<200" or ">40"
+    const rangeMatch = referenceRange.match(/(\d+\.?\d*)\s*-\s*(\d+\.?\d*)/);
     const lessThanMatch = referenceRange.match(/<(\d+\.?\d*)/);
     const greaterThanMatch = referenceRange.match(/>(\d+\.?\d*)/);
 

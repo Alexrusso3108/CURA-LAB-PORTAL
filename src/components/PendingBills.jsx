@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { pendingBillsAPI, labResultsAPI, testTemplatesAPI } from '../lib/newApi';
+import { supabase } from '../lib/supabase';
+import { pendingBillsAPI, labResultsAPI, testTemplatesAPI, patientDataAPI } from '../lib/newApi';
 import TestResultEntry from './TestResultEntry';
 import LabReport from './LabReport';
 
@@ -10,6 +11,7 @@ function PendingBills() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('pending'); // 'pending' or 'completed'
+  const [patientNames, setPatientNames] = useState({}); // Store patient names by MRN
 
   // Modal states
   const [showResultEntry, setShowResultEntry] = useState(false);
@@ -34,14 +36,83 @@ function PendingBills() {
       if (activeTab === 'pending') {
         const bills = await pendingBillsAPI.getPendingBills({ search: searchTerm });
         setPendingBills(bills);
+        await fetchPatientNames(bills);
       } else {
         const bills = await pendingBillsAPI.getCompletedBills({ search: searchTerm });
         setCompletedBills(bills);
+        await fetchPatientNames(bills);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Optimize patient name fetching with bulk requests
+  const fetchPatientNames = async (bills) => {
+    const names = {};
+    const mrnos = [...new Set(bills.map(b => b.patient_mrno || b.mrno).filter(Boolean))];
+    const appIds = [...new Set(bills.map(b => b.appointment_id).filter(Boolean))];
+
+    if (mrnos.length === 0 && appIds.length === 0) return;
+
+    try {
+      console.log(`🚀 Bulk fetching names for ${mrnos.length} MRNs and ${appIds.length} App IDs...`);
+
+      const queries = [];
+
+      // 1. Fetch from Users (Best source for MRN)
+      if (mrnos.length > 0) {
+        queries.push(
+          supabase
+            .from('users')
+            .select('mrno, name')
+            .in('mrno', mrnos)
+            .then(({ data }) => ({ type: 'users', data }))
+        );
+      }
+
+      // 2. Fetch from Appointments (Best for specific visit info)
+      if (appIds.length > 0) {
+        queries.push(
+          supabase
+            .from('appointments')
+            .select('appointment_id, patient_name, mrno')
+            .in('appointment_id', appIds)
+            .then(({ data }) => ({ type: 'appointments', data }))
+        );
+      }
+
+      const results = await Promise.all(queries);
+
+      // Process users first (base source)
+      const usersResult = results.find(r => r.type === 'users');
+      if (usersResult?.data) {
+        usersResult.data.forEach(user => {
+          if (user.mrno) names[user.mrno] = user.name;
+        });
+      }
+
+      // Process appointments (override if specific appointment has name, or fill gaps)
+      const appsResult = results.find(r => r.type === 'appointments');
+      if (appsResult?.data) {
+        appsResult.data.forEach(app => {
+          // If we have an appointment match, that name is often most relevant for the bill
+          if (app.mrno) {
+            // If we don't have a name yet, OR if this is the specific appointment for the bill
+            // For simplicity here, we just use it if we don't have one, or overwrite because appointment might be fresher?
+            // Actually, keep it simple: Ensure every MRNO has a name.
+            if (!names[app.mrno]) names[app.mrno] = app.patient_name;
+          }
+        });
+      }
+
+      setPatientNames(prev => ({ ...prev, ...names }));
+      console.log('✅ Bulk fetch complete.');
+
+    } catch (error) {
+      console.error('❌ Bulk fetch failed:', error);
     }
   };
 
@@ -222,6 +293,7 @@ function PendingBills() {
                   <tr>
                     <th>Bill Date</th>
                     <th>Patient MRN</th>
+                    <th>Patient Name</th>
                     <th>Test Name</th>
                     <th>Amount</th>
                     <th>Payment Status</th>
@@ -234,7 +306,7 @@ function PendingBills() {
                   {activeTab === 'pending' ? (
                     pendingBills.length === 0 ? (
                       <tr>
-                        <td colSpan="6" style={{ textAlign: 'center', padding: 'var(--space-2xl)' }}>
+                        <td colSpan="7" style={{ textAlign: 'center', padding: 'var(--space-2xl)' }}>
                           <p style={{ color: 'var(--text-secondary)' }}>
                             🎉 No pending bills! All results have been entered.
                           </p>
@@ -246,6 +318,9 @@ function PendingBills() {
                           <td>{formatDate(bill.bill_date)}</td>
                           <td>
                             <span className="font-semibold">{bill.patient_mrno}</span>
+                          </td>
+                          <td>
+                            {patientNames[bill.patient_mrno] || <span style={{ color: 'var(--text-tertiary)', fontStyle: 'italic' }}>Loading...</span>}
                           </td>
                           <td>
                             {bill.service_type_name || '(No test name)'}
@@ -282,6 +357,9 @@ function PendingBills() {
                           <td>{formatDate(bill.bill_date)}</td>
                           <td>
                             <span className="font-semibold">{bill.patient_mrno}</span>
+                          </td>
+                          <td>
+                            {patientNames[bill.patient_mrno] || <span style={{ color: 'var(--text-tertiary)', fontStyle: 'italic' }}>Loading...</span>}
                           </td>
                           <td>
                             {bill.service_type_name || '(No test name)'}

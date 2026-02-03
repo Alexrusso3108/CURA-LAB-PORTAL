@@ -1,0 +1,133 @@
+{
+  "name": "HAEMOGRAM ( CBC and ESR and PS)",
+  "params": [
+    {
+      "name": "hemoglobin",
+      "type": "numeric",
+      "unit": "gms%",
+      "order": 1,
+      "display_name": "HEMOGLOBIN",
+      "reference_range": "14 - 18"
+    },
+    {
+      "name": "total_count",
+      "type": "numeric",
+      "unit": "cells/cmm",
+      "order": 2,
+      "display_name": "TOTAL COUNT",
+      "reference_range": "4000 - 11000"
+    },
+    {
+      "name": "rbc_count",
+      "type": "numeric",
+      "unit": "Millions/c",
+      "order": 3,
+      "display_name": "RBC COUNT",
+      "reference_range": "4.7 - 6.1"
+    },
+    {
+      "name": "platelet_count",
+      "type": "numeric",
+      "unit": "Lakhs/cmm",
+      "order": 4,
+      "display_name": "PLATELET COUNT",
+      "reference_range": "1.5 - 4.5"
+    },
+    {
+      "name": "pcv",
+      "type": "numeric",
+      "unit": "%",
+      "order": 5,
+      "display_name": "PACKED CELL VOLUME",
+      "reference_range": "35 - 45"
+    },
+    {
+      "name": "mcv",
+      "type": "numeric",
+      "unit": "fl",
+      "order": 6,
+      "display_name": "MCV",
+      "reference_range": "80 - 99"
+    },
+    {
+      "name": "mch",
+      "type": "numeric",
+      "unit": "pg/mL",
+      "order": 7,
+      "display_name": "MCH",
+      "reference_range": "26 - 32"
+    },
+    {
+      "name": "mchc",
+      "type": "numeric",
+      "unit": "g/dl",
+      "order": 8,
+      "display_name": "MCHC",
+      "reference_range": "30 - 36"
+    },
+    {
+      "name": "neutrophils",
+      "type": "numeric",
+      "unit": "%",
+      "order": 9,
+      "display_name": "NEUTROPHILS",
+      "reference_range": "40 - 70"
+    },
+    {
+      "name": "lymphocytes",
+      "type": "numeric",
+      "unit": "%",
+      "order": 10,
+      "display_name": "LYMPHOCYTES",
+      "reference_range": "20 - 45"
+    },
+    {
+      "name": "eosinophil",
+      "type": "numeric",
+      "unit": "%",
+      "order": 11,
+      "display_name": "EOSINOPHIL",
+      "reference_range": "2 - 6"
+    },
+    {
+      "name": "monocytes",
+      "type": "numeric",
+      "unit": "%",
+      "order": 12,
+      "display_name": "MONOCYTES",
+      "reference_range": "1 - 8"
+    },
+    {
+      "name": "basophil",
+      "type": "numeric",
+      "unit": "%",
+      "order": 13,
+      "display_name": "BASOPHIL",
+      "reference_range": "0 - 1"
+    },
+    {
+      "name": "pt",
+      "type": "numeric",
+      "unit": "sec",
+      "order": 14,
+      "display_name": "PT",
+      "reference_range": "10 - 14"
+    },
+    {
+      "name": "inr",
+      "type": "numeric",
+      "unit": "",
+      "order": 15,
+      "display_name": "INR",
+      "reference_range": "0.8 - 1.1"
+    },
+    {
+      "name": "aptt",
+      "type": "numeric",
+      "unit": "sec",
+      "order": 16,
+      "display_name": "APTT",
+      "reference_range": "22 - 35"
+    }
+  ]
+}
