@@ -228,6 +228,15 @@ function TestResultEntry({ bill, template, onClose, onSave }) {
       updatedParams[paramName].status = status;
       updatedParams[paramName].flag = status === 'normal' ? '' : (status === 'critical' ? 'C' : 'H/L');
 
+      // Debug logging
+      console.log('Parameter Change:', {
+        paramName,
+        value,
+        referenceRange: updatedParams[paramName].reference_range,
+        calculatedStatus: status,
+        paramData: updatedParams[paramName]
+      });
+
       return {
         ...prev,
         test_parameters: updatedParams
@@ -452,12 +461,21 @@ function TestResultEntry({ bill, template, onClose, onSave }) {
                           <td>
                             <span
                               style={{
-                                color: getStatusColor(paramData.status),
+                                color: getStatusColor(paramData.status || 'normal'),
                                 fontWeight: 600,
-                                fontSize: '0.875rem'
+                                fontSize: '0.875rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '4px'
                               }}
                             >
-                              {paramData.status === 'normal' ? '✓' : '⚠️'}
+                              {!paramData.status || paramData.status === 'normal' ? (
+                                <>✓ Normal</>
+                              ) : paramData.status === 'critical' ? (
+                                <>🔴 Critical</>
+                              ) : (
+                                <>⚠️ Abnormal</>
+                              )}
                             </span>
                           </td>
                         </tr>

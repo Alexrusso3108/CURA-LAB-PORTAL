@@ -503,7 +503,7 @@ export const testTemplatesAPI = {
     }
   },
 
-  // Get template by test name
+  // Get template by test name or test code
   async getTemplateByTestName(testName) {
     try {
       const { data, error } = await supabase
@@ -515,7 +515,14 @@ export const testTemplatesAPI = {
 
       // Find match in JS to be safe from case/space issues
       const normalizedQuery = testName.trim().toLowerCase();
-      return data.find(t => t.test_name.toLowerCase() === normalizedQuery) || null;
+
+      // Try to match by test_name first, then by test_code
+      const match = data.find(t =>
+        t.test_name.toLowerCase() === normalizedQuery ||
+        (t.test_code && t.test_code.toLowerCase() === normalizedQuery)
+      );
+
+      return match || null;
     } catch (error) {
       console.error('Error fetching test template:', error);
       return null;
